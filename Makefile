@@ -1882,6 +1882,9 @@ smdk2410_config	:	unconfig
 SX1_config :		unconfig
 	@$(MKCONFIG) $(@:_config=) arm arm925t sx1
 
+TQ2440_config	:	unconfig
+	@$(MKCONFIG) $(@:_config=) arm arm920t TQ2440 NULL s3c24x0
+
 # TRAB default configuration:	8 MB Flash, 32 MB RAM
 trab_config \
 trab_bigram_config \
