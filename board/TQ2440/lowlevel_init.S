@@ -45,17 +45,17 @@
 #define BWSCON	0x48000000
 
 /* BWSCON */
-#define DW8		 	(0x0)
+#define DW8			 	(0x0)
 #define DW16		 	(0x1)
 #define DW32		 	(0x2)
 #define WAIT		 	(0x1<<2)
 #define UBLB		 	(0x1<<3)
 
-#define B1_BWSCON	  	(DW32)
-#define B2_BWSCON	  	(DW16)
-#define B3_BWSCON	  	(DW16 + WAIT + UBLB)
+#define B1_BWSCON	  	(DW16)  //IDE  //(DW32)
+#define B2_BWSCON	  	(DW16)	//IDE
+#define B3_BWSCON	  	(DW16 + WAIT + UBLB)   //not use?
 #define B4_BWSCON	  	(DW16)
-#define B5_BWSCON	  	(DW16)
+#define B5_BWSCON	  	(DW8)	//not use?	//(DW16)
 #define B6_BWSCON	  	(DW32)
 #define B7_BWSCON	  	(DW32)
 
@@ -77,6 +77,7 @@
 #define B1_Tacp		 	0x0
 #define B1_PMC		 	0x0
 
+/* BANK2CON */
 #define B2_Tacs		 	0x0
 #define B2_Tcos		 	0x0
 #define B2_Tacc		 	0x7
@@ -85,6 +86,7 @@
 #define B2_Tacp		 	0x0
 #define B2_PMC		 	0x0
 
+/* BANK3CON */
 #define B3_Tacs		 	0x0	/*  0clk */
 #define B3_Tcos		 	0x3	/*  4clk */
 #define B3_Tacc		 	0x7	/* 14clk */
@@ -93,6 +95,7 @@
 #define B3_Tacp		 	0x3     /*  6clk */
 #define B3_PMC		 	0x0	/* normal */
 
+/* BANK4CON */
 #define B4_Tacs		 	0x0	/*  0clk */
 #define B4_Tcos		 	0x0	/*  0clk */
 #define B4_Tacc		 	0x7	/* 14clk */
@@ -101,6 +104,7 @@
 #define B4_Tacp		 	0x0
 #define B4_PMC		 	0x0	/* normal */
 
+/* BANK5CON */
 #define B5_Tacs		 	0x0	/*  0clk */
 #define B5_Tcos		 	0x0	/*  0clk */
 #define B5_Tacc		 	0x7	/* 14clk */
@@ -109,10 +113,12 @@
 #define B5_Tacp		 	0x0
 #define B5_PMC		 	0x0	/* normal */
 
+/* BANK6CON */
 #define B6_MT		 	0x3	/* SDRAM */
 #define B6_Trcd	 	 	0x1
 #define B6_SCAN		 	0x1	/* 9bit */
 
+/* BANK7CON */
 #define B7_MT		 	0x3	/* SDRAM */
 #define B7_Trcd		 	0x1	/* 3clk */
 #define B7_SCAN		 	0x1	/* 9bit */
