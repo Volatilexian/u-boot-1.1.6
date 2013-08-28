@@ -28,14 +28,14 @@
  * 
  ************************************************/
 
-#ifndef __S3C2410_H__
-#define __S3C2410_H__
+#ifndef __S3C2440_H__
+#define __S3C2440_H__
 
 #define S3C24X0_UART_CHANNELS	3
 #define S3C24X0_SPI_CHANNELS	2
 
 /* S3C2410 only supports 512 Byte HW ECC */
-#define S3C2410_ECCSIZE		512
+#define S3C2410_ECCSIZE		512  /* not modified yet*/
 #define S3C2410_ECCBYTES	3
 
 typedef enum {
@@ -44,14 +44,15 @@ typedef enum {
 	S3C24X0_UART2
 } S3C24X0_UARTS_NR;
 
-/* S3C2410 device base addresses */
+/* S3C2440 device base addresses */
 #define S3C24X0_MEMCTL_BASE		0x48000000
 #define S3C24X0_USB_HOST_BASE		0x49000000
 #define S3C24X0_INTERRUPT_BASE		0x4A000000
 #define S3C24X0_DMA_BASE		0x4B000000
 #define S3C24X0_CLOCK_POWER_BASE	0x4C000000
 #define S3C24X0_LCD_BASE		0x4D000000
-#define S3C2410_NAND_BASE		0x4E000000
+#define S3C2440_NAND_BASE		0x4E000000   /* modified */
+#define S3C2440_CAMERA_BASE		0x4F000000   /* new add */
 #define S3C24X0_UART_BASE		0x50000000
 #define S3C24X0_TIMER_BASE		0x51000000
 #define S3C24X0_USB_DEVICE_BASE		0x52000140
@@ -59,10 +60,11 @@ typedef enum {
 #define S3C24X0_I2C_BASE		0x54000000
 #define S3C24X0_I2S_BASE		0x55000000
 #define S3C24X0_GPIO_BASE		0x56000000
-#define S3C24X0_RTC_BASE		0x57000000
-#define S3C2410_ADC_BASE		0x58000000
+#define S3C24X0_RTC_BASE		0x57000000  ?
+#define S3C2440_ADC_BASE		0x58000000   /* modified */
 #define S3C24X0_SPI_BASE		0x59000000
-#define S3C2410_SDI_BASE		0x5A000000
+#define S3C2440_SDI_BASE		0x5A000000   /* modified */
+#define S3C2440_AC97_BASE		0x5B000000   /* new add */
 
 
 /* include common stuff */
@@ -93,9 +95,13 @@ static inline S3C24X0_LCD * const S3C24X0_GetBase_LCD(void)
 {
 	return (S3C24X0_LCD * const)S3C24X0_LCD_BASE;
 }
-static inline S3C2410_NAND * const S3C2410_GetBase_NAND(void)
+static inline S3C2440_NAND * const S3C2440_GetBase_NAND(void) /* modified */
 {
-	return (S3C2410_NAND * const)S3C2410_NAND_BASE;
+	return (S3C2440_NAND * const)S3C2440_NAND_BASE;
+}
+static inline S3C2440_CAMERA * const S3C2440_GetBase_CAMERA(void) /* add */
+{
+	return (S3C2440_CAMERA * const)S3C2440_CAMERA_BASE;
 }
 static inline S3C24X0_UART * const S3C24X0_GetBase_UART(S3C24X0_UARTS_NR nr)
 {
@@ -129,17 +135,21 @@ static inline S3C24X0_RTC * const S3C24X0_GetBase_RTC(void)
 {
 	return (S3C24X0_RTC * const)S3C24X0_RTC_BASE;
 }
-static inline S3C2410_ADC * const S3C2410_GetBase_ADC(void)
+static inline S3C2440_ADC * const S3C2440_GetBase_ADC(void)  /* modified */
 {
-	return (S3C2410_ADC * const)S3C2410_ADC_BASE;
+	return (S3C2440_ADC * const)S3C2440_ADC_BASE;
 }
 static inline S3C24X0_SPI * const S3C24X0_GetBase_SPI(void)
 {
 	return (S3C24X0_SPI * const)S3C24X0_SPI_BASE;
 }
-static inline S3C2410_SDI * const S3C2410_GetBase_SDI(void)
+static inline S3C2440_SDI * const S3C2440_GetBase_SDI(void)  /* modified */
 {
-	return (S3C2410_SDI * const)S3C2410_SDI_BASE;
+	return (S3C2440_SDI * const)S3C2440_SDI_BASE;
+}
+static inline S3C2440_AC97 * const S3C2440_GetBase_AC97(void)  /* add */
+{
+	return (S3C2440_AC97 * const)S3C2440_AC97_BASE;
 }
 
 
@@ -224,4 +234,4 @@ static inline S3C2410_SDI * const S3C2410_GetBase_SDI(void)
 		 rINTPND;\
 		 }
 /* Wait until rINTPND is changed for the case that the ISR is very short. */
-#endif /*__S3C2410_H__*/
+#endif /*__S3C2440_H__*/
