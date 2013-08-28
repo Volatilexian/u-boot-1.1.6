@@ -126,9 +126,16 @@ reset:
 # define INTMSK		0x4A000008	/* Interupt-Controller base addresses */
 # define INTSUBMSK	0x4A00001C
 # define CLKDIVN	0x4C000014	/* clock divisor register */
+#elif defined(CONFIG_S3C2440)	/*add by volatile xian*/
+# define pWTCON		0x53000000
+# define INTMSK		0x4A000008
+# define INTSUBMSK	0x4A00001C
+# define MPLLCON	0x4C000004
+# define UPLLCON	0x4C000008
+# define CLKDIVN	0x4C000014
 #endif
 
-#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410)
+#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)   /*modified by volatile xian*/
 	ldr     r0, =pWTCON
 	mov     r1, #0x0
 	str     r1, [r0]
@@ -139,18 +146,37 @@ reset:
 	mov	r1, #0xffffffff
 	ldr	r0, =INTMSK
 	str	r1, [r0]
-# if defined(CONFIG_S3C2410)
+#if defined(CONFIG_S3C2410)
 	ldr	r1, =0x3ff
 	ldr	r0, =INTSUBMSK
 	str	r1, [r0]
-# endif
+#elif defined(CONFIG_S3C2440)   /*add by volatile xian*/
+	ldr	r1, =0x7fff
+	ldr	r0, =INTSUBMSK
+	str	r1, [r0]
+#endif
 
+#if defined(CONFIG_S3C2440)	/*add by volatile xian*/
+	ldr	r0, =CLKDIVN
+	mov	r1, #5	/* FCLK:HCLK:PCLK=1:4:8, UCLK=UPLL */
+	str	r1, [r0]
+
+	ldr	r0, =UPLLCON
+	ldr	r1, =0x38022	/* 48MHz */
+	str	r1, [r0]
+
+	ldr	r0, =MPLLCON
+	ldr	r1, =0x5c021	/* 400MHz */
+	str	r1, [r0]
+#else
 	/* FCLK:HCLK:PCLK = 1:2:4 */
 	/* default FCLK is 120 MHz ! */
 	ldr	r0, =CLKDIVN
 	mov	r1, #3
 	str	r1, [r0]
-#endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 */
+#endif
+
+#endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 || CONFIG_S3C2440 */
 
 	/*
 	 * we do sys-critical inits only at reboot,

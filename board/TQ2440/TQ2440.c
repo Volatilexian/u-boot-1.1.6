@@ -26,11 +26,11 @@
  */
 
 #include <common.h>
-#include <s3c2410.h>
+#include <s3c2440.h>
 
 DECLARE_GLOBAL_DATA_PTR;
 
-#define FCLK_SPEED 1
+#define FCLK_SPEED 2
 
 #if FCLK_SPEED==0		/* Fout = 203MHz, Fin = 12MHz for Audio */
 #define M_MDIV	0xC3
@@ -40,9 +40,13 @@ DECLARE_GLOBAL_DATA_PTR;
 #define M_MDIV	0xA1
 #define M_PDIV	0x3
 #define M_SDIV	0x1
+#elif FCLK_SPEED==2		/* Fout = 400MHz ,  add by volatile xian*/
+#define M_MDIV	0x5C
+#define M_PDIV	0x2
+#define M_SDIV	0x1
 #endif
 
-#define USB_CLOCK 1
+#define USB_CLOCK 2
 
 #if USB_CLOCK==0
 #define U_M_MDIV	0xA1
@@ -51,6 +55,10 @@ DECLARE_GLOBAL_DATA_PTR;
 #elif USB_CLOCK==1
 #define U_M_MDIV	0x48
 #define U_M_PDIV	0x3
+#define U_M_SDIV	0x2
+#elif USB_CLOCK==2	/* 48MHz, add by volatile xian */
+#define U_M_MDIV	0x38
+#define U_M_PDIV	0x2
 #define U_M_SDIV	0x2
 #endif
 
@@ -78,6 +86,8 @@ int board_init (void)
 
 	/* some delay between MPLL and UPLL */
 	delay (4000);
+
+/* i heared the upll have to set first, is it must be? */
 
 	/* configure UPLL */
 	clk_power->UPLLCON = ((U_M_MDIV << 12) + (U_M_PDIV << 4) + U_M_SDIV);
@@ -116,7 +126,7 @@ int board_init (void)
 
 int dram_init (void)
 {
-	gd->bd->bi_dram[0].start = PHYS_SDRAM_1;
+	gd->bd->bi_dram[0].start = PHYS_SDRAM_1;  /* define in TQ2440.h */
 	gd->bd->bi_dram[0].size = PHYS_SDRAM_1_SIZE;
 
 	return 0;

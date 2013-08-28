@@ -1,14 +1,6 @@
 /*
- * (C) Copyright 2002
- * Sysgo Real-Time Solutions, GmbH <www.elinos.com>
- * Marius Groeger <mgroeger@sysgo.de>
- * Gary Jennejohn <gj@denx.de>
- * David Mueller <d.mueller@elsoft.ch>
- *
- * Configuation settings for the SAMSUNG SMDK2410 board.
- *
- * See file CREDITS for list of people who contributed to this
- * project.
+ * Configuation settings for the TQ2440 board.
+ * modified by volatile xian
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -34,8 +26,10 @@
  * (easy to change)
  */
 #define CONFIG_ARM920T		1	/* This is an ARM920T Core	*/
-#define	CONFIG_S3C2410		1	/* in a SAMSUNG S3C2410 SoC     */
-#define CONFIG_SMDK2410		1	/* on a SAMSUNG SMDK2410 Board  */
+#define	CONFIG_S3C2440		1	/* in a SAMSUNG S3C2440 SoC     */
+#define CONFIG_TQ2440		1	/* on a SAMSUNG TQ2440 Board  */
+/*#define	CONFIG_S3C2410		1	 in a SAMSUNG S3C2410 SoC     */
+/*#define CONFIG_SMDK2410		1	 on a SAMSUNG SMDK2410 Board  */
 
 /* input clock of PLL */
 #define CONFIG_SYS_CLK_FREQ	12000000/* the SMDK2410 has 12MHz input clock */
@@ -108,7 +102,7 @@
  * Miscellaneous configurable options
  */
 #define	CFG_LONGHELP				/* undef to save memory		*/
-#define	CFG_PROMPT		"SMDK2410 # "	/* Monitor Command Prompt	*/
+#define	CFG_PROMPT		"[TQ2440 #] "	/* Monitor Command Prompt	*/
 #define	CFG_CBSIZE		256		/* Console I/O Buffer Size	*/
 #define	CFG_PBSIZE (CFG_CBSIZE+sizeof(CFG_PROMPT)+16) /* Print Buffer Size */
 #define	CFG_MAXARGS		16		/* max number of command args	*/
