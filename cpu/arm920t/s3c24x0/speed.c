@@ -28,6 +28,8 @@
  * as they seem to have the same PLL and clock machinery inside.
  * The different address mapping is handled by the s3c24xx.h files below.
  */
+/* modified to support the S3C2440---volatile xian
+ */
 
 #include <common.h>
 #if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) || defined(CONFIG_S3C2440)

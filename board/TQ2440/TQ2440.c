@@ -87,7 +87,7 @@ int board_init (void)
 	/* some delay between MPLL and UPLL */
 	delay (4000);
 
-/* i heared the upll have to set first, is it must be? */
+/* i heared the upll have to set first, is it must be? ---volatile_xian */
 
 	/* configure UPLL */
 	clk_power->UPLLCON = ((U_M_MDIV << 12) + (U_M_PDIV << 4) + U_M_SDIV);

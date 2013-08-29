@@ -1,15 +1,7 @@
 #
-# (C) Copyright 2002
-# Gary Jennejohn, DENX Software Engineering, <gj@denx.de>
-# David Mueller, ELSOFT AG, <d.mueller@elsoft.ch>
+# TQ2440 board with S3C2440 (ARM920T) cpu
 #
-# SAMSUNG SMDK2410 board with S3C2410X (ARM920T) cpu
-#
-# see http://www.samsung.com/ for more information on SAMSUNG
-#
-
-#
-# SMDK2410 has 1 bank of 64 MB DRAM
+# TQ2440 has  64 MB DRAM
 #
 # 3000'0000 to 3400'0000
 #

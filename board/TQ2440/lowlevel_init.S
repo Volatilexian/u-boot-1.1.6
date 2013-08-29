@@ -1,7 +1,7 @@
 /*
  * Memory Setup stuff - taken from blob memsetup.S
  *
- *modified by volatile xian on 2013.8.28. suport TQ2440(S3C2440).
+ *modified by volatile xian on 2013.8.28. support TQ2440(S3C2440).
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software

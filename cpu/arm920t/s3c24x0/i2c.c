@@ -25,6 +25,9 @@
  * as they seem to have the same I2C controller inside.
  * The different address mapping is handled by the s3c24xx.h files below.
  */
+/* modified to support the S3C2440----volatile xian.
+ *
+ */
 
 #include <common.h>
 
@@ -65,7 +68,7 @@ static int GetI2CSDA(void)
 {
 	S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
 
-#ifdef CONFIG_S3C2410
+#ifdef CONFIG_S3C2410 || CONFIG_S3C2440
 	return (gpio->GPEDAT & 0x8000) >> 15;
 #endif
 #ifdef CONFIG_S3C2400
@@ -84,7 +87,7 @@ static void SetI2CSCL(int x)
 {
 	S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
 
-#ifdef CONFIG_S3C2410
+#ifdef CONFIG_S3C2410 || CONFIG_S3C2440
 	gpio->GPEDAT = (gpio->GPEDAT & ~0x4000) | (x&1) << 14;
 #endif
 #ifdef CONFIG_S3C2400
@@ -141,7 +144,7 @@ void i2c_init (int speed, int slaveadd)
 	}
 
 	if ((status & I2CSTAT_BSY) || GetI2CSDA () == 0) {
-#ifdef CONFIG_S3C2410
+#ifdef CONFIG_S3C2410 || CONFIG_S3C2440
 		ulong old_gpecon = gpio->GPECON;
 #endif
 #ifdef CONFIG_S3C2400
@@ -149,7 +152,7 @@ void i2c_init (int speed, int slaveadd)
 #endif
 		/* bus still busy probably by (most) previously interrupted transfer */
 
-#ifdef CONFIG_S3C2410
+#ifdef CONFIG_S3C2410 || CONFIG_S3C2440
 		/* set I2CSDA and I2CSCL (GPE15, GPE14) to GPIO */
 		gpio->GPECON = (gpio->GPECON & ~0xF0000000) | 0x10000000;
 #endif
@@ -173,7 +176,7 @@ void i2c_init (int speed, int slaveadd)
 		udelay (1000);
 
 		/* restore pin functions */
-#ifdef CONFIG_S3C2410
+#ifdef CONFIG_S3C2410 || CONFIG_S3C2440
 		gpio->GPECON = old_gpecon;
 #endif
 #ifdef CONFIG_S3C2400
