@@ -30,7 +30,7 @@
  */
 
 #include <common.h>
-#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB)
+#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) || defined(CONFIG_S3C2440)
 
 #include <arm920t.h>
 #if defined(CONFIG_S3C2400)
@@ -218,4 +218,4 @@ void reset_cpu (ulong ignored)
 	/*NOTREACHED*/
 }
 
-#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) */
+#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) || defined(CONFIG_S3C2440) */
