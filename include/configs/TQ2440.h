@@ -30,7 +30,7 @@
 #define CONFIG_TQ2440		1	/* on a SAMSUNG TQ2440 Board  */
 
 /* input clock of PLL */
-#define CONFIG_SYS_CLK_FREQ	12000000/* the SMDK2410 has 12MHz input clock */
+#define CONFIG_SYS_CLK_FREQ	12000000/* the TQ2440 has 12MHz input clock */
 
 
 #define USE_920T_MMU		1
@@ -52,7 +52,7 @@
 /*
  * select serial console configuration
  */
-#define CONFIG_SERIAL1          1	/* we use SERIAL 1 on SMDK2410 */
+#define CONFIG_SERIAL1          1	/* we use SERIAL 1 on TQ2440 */
 
 /************************************************************
  * RTC
