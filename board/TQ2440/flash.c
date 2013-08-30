@@ -21,9 +21,9 @@ ulong myflush (void);
 
 
 #define FLASH_BANK_SIZE	PHYS_FLASH_SIZE
-#define MAIN_SECT_SIZE  0x8000	/* 32 KB */
+#define MAIN_SECT_SIZE  0x8000	/* 32 KB, maybe using Kword is correct */
 
-flash_info_t flash_info[CFG_MAX_FLASH_BANKS];
+flash_info_t flash_info[CFG_MAX_FLASH_BANKS];   /* the banks is 1 */
 
 
 #define CMD_READ_ARRAY		0x000000F0
@@ -75,7 +75,7 @@ ulong flash_init (void)
 		memset (flash_info[i].protect, 0, CFG_MAX_FLASH_SECT);
 		if (i == 0)
 			flashbase = PHYS_FLASH_1;
-		else
+		else /* can not run here */
 			panic ("configured too many flash banks!\n");
 		for (j = 0; j < flash_info[i].sector_count; j++) {
 			if (j <= 3) {
@@ -103,17 +103,17 @@ ulong flash_init (void)
 					flashbase + (j - 3) * MAIN_SECT_SIZE;
 			}
 		}
-		size += flash_info[i].size;
+		size += flash_info[i].size;   /* sum all banks, but there is noly one nor flash */
 	}
 
 	flash_protect (FLAG_PROTECT_SET,
 		       CFG_FLASH_BASE,
 		       CFG_FLASH_BASE + monitor_flash_len - 1,
-		       &flash_info[0]);
+		       &flash_info[0]);   /* protect the monitor code */
 
 	flash_protect (FLAG_PROTECT_SET,
 		       CFG_ENV_ADDR,
-		       CFG_ENV_ADDR + CFG_ENV_SIZE - 1, &flash_info[0]);
+		       CFG_ENV_ADDR + CFG_ENV_SIZE - 1, &flash_info[0]); /*protect the env */
 
 	return size;
 }

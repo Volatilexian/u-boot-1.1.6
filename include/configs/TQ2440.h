@@ -70,7 +70,7 @@
 #define CONFIG_COMMANDS \
 			(CONFIG_CMD_DFL	 | \
 			CFG_CMD_CACHE	 | \
-			/*CFG_CMD_NAND	 |*/ \
+			CFG_CMD_NAND	 | \
 			/*CFG_CMD_EEPROM |*/ \
 			/*CFG_CMD_I2C	 |*/ \
 			/*CFG_CMD_USB	 |*/ \
@@ -176,5 +176,16 @@
 
 #define	CFG_ENV_IS_IN_FLASH	1
 #define CFG_ENV_SIZE		0x10000	/* Total Size of Environment Sector */
+
+/*-----------------------------------------------------------------------
+ * NAND FLASH
+ */
+#define CONFIG_TQ2440_NAND_FLASH	1    /* use the nand flash */
+
+#ifdef CONFIG_TQ2440_NAND_FLASH
+#define NAND_MAX_CHIPS		1		/* only one nand flash */
+#define CFG_MAX_NAND_DEVICE	1		/*  */
+#define CFG_NAND_BASE		0		/* it's said that it will be reset in board_nand_init */
+#endif
 
 #endif	/* __CONFIG_H */
