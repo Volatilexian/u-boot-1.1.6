@@ -183,7 +183,7 @@ reset:
 	 * not when booting from ram!
 	 */
 #ifndef CONFIG_SKIP_LOWLEVEL_INIT
-	bl	cpu_init_crit
+	@bl	cpu_init_crit
 #endif
 
 #ifndef CONFIG_SKIP_RELOCATE_UBOOT

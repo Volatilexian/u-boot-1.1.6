@@ -143,11 +143,13 @@
 #define CFG_FLASH_BASE		PHYS_FLASH_1
 
 /*-----------------------------------------------------------------------
- * FLASH and environment organization
+ * FLASH and environment organization  NOR FLASH
  */
 
-#define CONFIG_AMD_LV400	1	/* uncomment this if you have a LV400 flash */
+#define CONFIG_EON_29LV160AB	1	/* add to support TQ2440--volatile xian*/
+
 #if 0
+#define CONFIG_AMD_LV400	1	/* uncomment this if you have a LV400 flash */
 #define CONFIG_AMD_LV800	1	/* uncomment this if you have a LV800 flash */
 #endif
 
@@ -161,6 +163,11 @@
 #define PHYS_FLASH_SIZE		0x00080000 /* 512KB */
 #define CFG_MAX_FLASH_SECT	(11)	/* max number of sectors on one chip */
 #define CFG_ENV_ADDR		(CFG_FLASH_BASE + 0x070000) /* addr of environment */
+#endif
+#ifdef CONFIG_EON_29LV160AB
+#define PHYS_FLASH_SIZE		0x00200000 /* 2MB */
+#define CFG_MAX_FLASH_SECT	(35)	/* max number of sectors on one chip */
+#define CFG_ENV_ADDR		(CFG_FLASH_BASE + 0x080000) /* addr of environment */
 #endif
 
 /* timeout values are in ticks */
