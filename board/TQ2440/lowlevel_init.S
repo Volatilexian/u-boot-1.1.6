@@ -104,7 +104,6 @@
 #define Trc		 	0x3	/* 7clk */
 #define Tchr		 	0x2	/* 3clk */
 #define REFCNT		 	0x4f4	/* period=7.8125us or 8 us, HCLK=100Mhz, (2048+1-7.8125*100) */
-/*#define REFCNT		 	1113	/* period=15.6us, HCLK=60Mhz, (2048+1-15.6*60) */
 /**************************************/
 
 _TEXT_BASE:

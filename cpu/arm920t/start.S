@@ -130,9 +130,12 @@ reset:
 # define pWTCON		0x53000000
 # define INTMSK		0x4A000008
 # define INTSUBMSK	0x4A00001C
+#if 0
 # define MPLLCON	0x4C000004
 # define UPLLCON	0x4C000008
+#endif
 # define CLKDIVN	0x4C000014
+# define CAMDIVN	0x4C000018
 #endif
 
 #if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)   /*modified by volatile xian*/
@@ -156,11 +159,17 @@ reset:
 	str	r1, [r0]
 #endif
 
+#if 0
 #if defined(CONFIG_S3C2440)	/*add by volatile xian*/
+	ldr	r0, =CAMDIVN
+	mov	r1, #0
+	str	r1, [r0]
+
 	ldr	r0, =CLKDIVN
 	mov	r1, #5	/* FCLK:HCLK:PCLK=1:4:8, UCLK=UPLL */
 	str	r1, [r0]
 
+#if 0
 	ldr	r0, =UPLLCON
 	ldr	r1, =0x38022	/* 48MHz */
 	str	r1, [r0]
@@ -168,13 +177,15 @@ reset:
 	ldr	r0, =MPLLCON
 	ldr	r1, =0x5c021	/* 400MHz */
 	str	r1, [r0]
-#else
+#endif    /* if 0 */
+#else     /* s3c2410 */
 	/* FCLK:HCLK:PCLK = 1:2:4 */
 	/* default FCLK is 120 MHz ! */
 	ldr	r0, =CLKDIVN
 	mov	r1, #3
 	str	r1, [r0]
-#endif
+#endif    /* 2440 or 2410 */
+#endif   /* if 0*/
 
 #endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 || CONFIG_S3C2440 */
 
@@ -183,7 +194,7 @@ reset:
 	 * not when booting from ram!
 	 */
 #ifndef CONFIG_SKIP_LOWLEVEL_INIT
-	@bl	cpu_init_crit
+	bl	cpu_init_crit
 #endif
 
 #ifndef CONFIG_SKIP_RELOCATE_UBOOT

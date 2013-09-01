@@ -30,6 +30,8 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
+#define CLKDIVN_148		0x05     /* fclk:hclk:pclk = 1:4:8, uclk=upll */
+
 #define FCLK_SPEED 2
 
 #if FCLK_SPEED==0		/* Fout = 203MHz, Fin = 12MHz for Audio */
@@ -42,7 +44,7 @@ DECLARE_GLOBAL_DATA_PTR;
 #define M_SDIV	0x1
 #elif FCLK_SPEED==2		/* Fout = 400MHz ,  add by volatile xian*/
 #define M_MDIV	0x5C
-#define M_PDIV	0x2
+#define M_PDIV	0x1		/* it setted 0x2, maybe it's the source of the wrong */
 #define M_SDIV	0x1
 #endif
 
@@ -78,22 +80,31 @@ int board_init (void)
 	S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
 	S3C24X0_GPIO * const gpio = S3C24X0_GetBase_GPIO();
 
+	clk_power->CLKDIVN = CLKDIVN_148;
+
+__asm__(
+		"mrc	p15, 0, r1, c1, c0, 0\n"
+		"orr	r1, r1, #0xc0000000\n"
+		"mcr	p15, 0, r1, c1, c0, 0\n"
+		:::"r1"
+		);
+
 	/* to reduce PLL lock time, adjust the LOCKTIME register */
 	clk_power->LOCKTIME = 0xFFFFFF;
-
-	/* configure MPLL */
-	clk_power->MPLLCON = ((M_MDIV << 12) + (M_PDIV << 4) + M_SDIV);
-
-	/* some delay between MPLL and UPLL */
-	delay (4000);
-
-/* i heared the upll have to set first, is it must be? ---volatile_xian */
 
 	/* configure UPLL */
 	clk_power->UPLLCON = ((U_M_MDIV << 12) + (U_M_PDIV << 4) + U_M_SDIV);
 
 	/* some delay between MPLL and UPLL */
 	delay (8000);
+
+/* i heared the upll have to set first, is it must be? ---volatile_xian */
+
+	/* configure MPLL */
+	clk_power->MPLLCON = ((M_MDIV << 12) + (M_PDIV << 4) + M_SDIV);
+
+	/* some delay between MPLL and UPLL */
+	delay (4000);
 
 	/* set up the I/O ports */
 	gpio->GPACON = 0x007FFFFF;
@@ -113,7 +124,7 @@ int board_init (void)
 	gpio->GPHUP = 0x000007FF;
 
 	/* arch number of SMDK2410-Board */
-	gd->bd->bi_arch_number = MACH_TYPE_SMDK2410;
+	gd->bd->bi_arch_number = MACH_TYPE_S3C2440;
 
 	/* adress of boot parameters */
 	gd->bd->bi_boot_params = 0x30000100;
