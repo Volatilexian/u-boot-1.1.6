@@ -4,9 +4,7 @@
  * Copyright (C) 1999 2000 2001 Erik Mouw (J.A.K.Mouw@its.tudelft.nl) and
  *                     Jan-Derk Bakker (J.D.Bakker@its.tudelft.nl)
  *
- * Modified for the Samsung SMDK2410 by
- * (C) Copyright 2002
- * David Mueller, ELSOFT AG, <d.mueller@elsoft.ch>
+ * Modified for the TQ2440 by  volatile xian
  *
  * See file CREDITS for list of people who contributed to this
  * project.
