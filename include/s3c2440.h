@@ -2,6 +2,9 @@
  * (C) Copyright 2003
  * David Müller ELSOFT AG Switzerland. d.mueller@elsoft.ch
  *
+ * modified for s3c2440(come from s3c2410)
+ * volatile xian
+ *
  * See file CREDITS for list of people who contributed to this
  * project.
  *
@@ -22,14 +25,14 @@
  */
 
 /************************************************
- * NAME	    : s3c2410.h
- * Version  : 31.3.2003
+ * NAME	    : s3c2440.h
+ * Version  : 2013.9.2
  *
- * Based on S3C2410X User's manual Rev 1.1
+ * 
  ************************************************/
 
-#ifndef __S3C2410_H__
-#define __S3C2410_H__
+#ifndef __S3C2440_H__
+#define __S3C2440_H__
 
 #define S3C24X0_UART_CHANNELS	3
 #define S3C24X0_SPI_CHANNELS	2
@@ -44,14 +47,14 @@ typedef enum {
 	S3C24X0_UART2
 } S3C24X0_UARTS_NR;
 
-/* S3C2410 device base addresses */
+/* S3C2440 device base addresses */
 #define S3C24X0_MEMCTL_BASE		0x48000000
 #define S3C24X0_USB_HOST_BASE		0x49000000
 #define S3C24X0_INTERRUPT_BASE		0x4A000000
 #define S3C24X0_DMA_BASE		0x4B000000
 #define S3C24X0_CLOCK_POWER_BASE	0x4C000000
 #define S3C24X0_LCD_BASE		0x4D000000
-#define S3C2410_NAND_BASE		0x4E000000
+#define S3C2440_NAND_BASE		0x4E000000
 #define S3C24X0_UART_BASE		0x50000000
 #define S3C24X0_TIMER_BASE		0x51000000
 #define S3C24X0_USB_DEVICE_BASE		0x52000140
@@ -60,9 +63,9 @@ typedef enum {
 #define S3C24X0_I2S_BASE		0x55000000
 #define S3C24X0_GPIO_BASE		0x56000000
 #define S3C24X0_RTC_BASE		0x57000000
-#define S3C2410_ADC_BASE		0x58000000
+#define S3C2440_ADC_BASE		0x58000000
 #define S3C24X0_SPI_BASE		0x59000000
-#define S3C2410_SDI_BASE		0x5A000000
+#define S3C2440_SDI_BASE		0x5A000000
 
 
 /* include common stuff */
@@ -93,9 +96,9 @@ static inline S3C24X0_LCD * const S3C24X0_GetBase_LCD(void)
 {
 	return (S3C24X0_LCD * const)S3C24X0_LCD_BASE;
 }
-static inline S3C2410_NAND * const S3C2410_GetBase_NAND(void)
+static inline S3C2440_NAND * const S3C2440_GetBase_NAND(void)
 {
-	return (S3C2410_NAND * const)S3C2410_NAND_BASE;
+	return (S3C2440_NAND * const)S3C2440_NAND_BASE;
 }
 static inline S3C24X0_UART * const S3C24X0_GetBase_UART(S3C24X0_UARTS_NR nr)
 {
@@ -129,17 +132,17 @@ static inline S3C24X0_RTC * const S3C24X0_GetBase_RTC(void)
 {
 	return (S3C24X0_RTC * const)S3C24X0_RTC_BASE;
 }
-static inline S3C2410_ADC * const S3C2410_GetBase_ADC(void)
+static inline S3C2440_ADC * const S3C2440_GetBase_ADC(void)
 {
-	return (S3C2410_ADC * const)S3C2410_ADC_BASE;
+	return (S3C2440_ADC * const)S3C2440_ADC_BASE;
 }
 static inline S3C24X0_SPI * const S3C24X0_GetBase_SPI(void)
 {
 	return (S3C24X0_SPI * const)S3C24X0_SPI_BASE;
 }
-static inline S3C2410_SDI * const S3C2410_GetBase_SDI(void)
+static inline S3C2440_SDI * const S3C2440_GetBase_SDI(void)
 {
-	return (S3C2410_SDI * const)S3C2410_SDI_BASE;
+	return (S3C2440_SDI * const)S3C2440_SDI_BASE;
 }
 
 
@@ -224,4 +227,4 @@ static inline S3C2410_SDI * const S3C2410_GetBase_SDI(void)
 		 rINTPND;\
 		 }
 /* Wait until rINTPND is changed for the case that the ISR is very short. */
-#endif /*__S3C2410_H__*/
+#endif /*__S3C2440_H__*/

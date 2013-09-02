@@ -580,6 +580,15 @@ typedef struct {
 } /*__attribute__((__packed__))*/ S3C2410_ADC;
 
 
+typedef struct {
+    S3C24X0_REG32   ADCCON;
+    S3C24X0_REG32   ADCTSC;
+    S3C24X0_REG32   ADCDLY;
+    S3C24X0_REG32   ADCDAT0;
+    S3C24X0_REG32   ADCDAT1;
+} /*__attribute__((__packed__))*/ S3C2440_ADC;
+
+
 /* SPI (see manual chapter 22) */
 typedef struct {
     S3C24X0_REG32   SPCON;
@@ -678,6 +687,33 @@ typedef struct {
 #endif
     S3C24X0_REG32   SDIIMSK;
 } /*__attribute__((__packed__))*/ S3C2410_SDI;
+
+
+typedef struct {
+    S3C24X0_REG32   SDICON;
+    S3C24X0_REG32   SDIPRE;
+    S3C24X0_REG32   SDICARG;
+    S3C24X0_REG32   SDICCON;
+    S3C24X0_REG32   SDICSTA;
+    S3C24X0_REG32   SDIRSP0;
+    S3C24X0_REG32   SDIRSP1;
+    S3C24X0_REG32   SDIRSP2;
+    S3C24X0_REG32   SDIRSP3;
+    S3C24X0_REG32   SDIDTIMER;
+    S3C24X0_REG32   SDIBSIZE;
+    S3C24X0_REG32   SDIDCON;
+    S3C24X0_REG32   SDIDCNT;
+    S3C24X0_REG32   SDIDSTA;
+    S3C24X0_REG32   SDIFSTA;
+#ifdef __BIG_ENDIAN
+    S3C24X0_REG8    res[3];
+    S3C24X0_REG8    SDIDAT;
+#else
+    S3C24X0_REG8    SDIDAT;
+    S3C24X0_REG8    res[3];
+#endif
+    S3C24X0_REG32   SDIIMSK;
+} /*__attribute__((__packed__))*/ S3C2440_SDI;
 
 
 #if 0
