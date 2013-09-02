@@ -120,7 +120,6 @@ extern void flash_read_factory_serial(flash_info_t * info, void * buffer, int of
 
 #define AMD_MANUFACT	0x00010001	/* AMD	   manuf. ID in D23..D16, D7..D0 */
 #define FUJ_MANUFACT	0x00040004	/* FUJITSU manuf. ID in D23..D16, D7..D0 */
-#define EON_MANUFACT	0x001C001C  /* EON   manuf, add by volatile xian*/
 #define ATM_MANUFACT	0x001F001F	/* ATMEL */
 #define STM_MANUFACT	0x00200020	/* STM (Thomson) manuf. ID in D23.. -"- */
 #define SST_MANUFACT	0x00BF00BF	/* SST	   manuf. ID in D23..D16, D7..D0 */
@@ -179,8 +178,6 @@ extern void flash_read_factory_serial(flash_info_t * info, void * buffer, int of
 
 #define AMD_ID_DL163T	0x22282228	/* 29DL163T ID (16 M, top boot sector)	*/
 #define AMD_ID_DL163B	0x222B222B	/* 29DL163B ID (16 M, bottom boot sect) */
-
-#define EON_ID_29LV160AB	0x22492249	/* 29lv160ab id (16M, bottom boot sect, add by volatile xian */
 
 #define AMD_ID_LV320T	0x22F622F6	/* 29LV320T ID (32 M, top boot sector)	*/
 #define MX_ID_LV320T	0x22A722A7	/* 29LV320T by Macronix, AMD compatible */

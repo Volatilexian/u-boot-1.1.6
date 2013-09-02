@@ -1,7 +1,25 @@
 /*
  * Memory Setup stuff - taken from blob memsetup.S
  *
- *modified by volatile xian on 2013.8.28. support TQ2440(S3C2440).
+ * Copyright (C) 1999 2000 2001 Erik Mouw (J.A.K.Mouw@its.tudelft.nl) and
+ *                     Jan-Derk Bakker (J.D.Bakker@its.tudelft.nl)
+ *
+ * Modified for the Samsung SMDK2410 by
+ * (C) Copyright 2002
+ * David Mueller, ELSOFT AG, <d.mueller@elsoft.ch>
+ *
+ * See file CREDITS for list of people who contributed to this
+ * project.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
@@ -10,30 +28,38 @@
  */
 
 
-#include <config.h>      //include/configs/TQ2440.h
+#include <config.h>
 #include <version.h>
 
 
 /* some parameters for the board */
 
+/*
+ *
+ * Taken from linux/arch/arm/boot/compressed/head-s3c2410.S
+ *
+ * Copyright (C) 2002 Samsung Electronics SW.LEE  <hitchcar@sec.samsung.com>
+ *
+ */
+
 #define BWSCON	0x48000000
 
-/* BWSCONx */
-#define DW8			(0x0)
+/* BWSCON */
+#define DW8		 	(0x0)
 #define DW16		 	(0x1)
 #define DW32		 	(0x2)
 #define WAIT		 	(0x1<<2)
 #define UBLB		 	(0x1<<3)
 
-#define B1_BWSCON	  	(DW16)  //IDE  //(DW32)
-#define B2_BWSCON	  	(DW16)	//IDE
-#define B3_BWSCON	  	(DW16 + WAIT + UBLB)   //not use?
+#define B1_BWSCON	  	(DW16)
+#define B2_BWSCON	  	(DW16)
+#define B3_BWSCON	  	(DW16 + WAIT + UBLB)
 #define B4_BWSCON	  	(DW16)
-#define B5_BWSCON	  	(DW8)	//not use?	//(DW16)
+#define B5_BWSCON	  	(DW8)
 #define B6_BWSCON	  	(DW32)
 #define B7_BWSCON	  	(DW32)
 
-/* BANKCON0 */
+/* BANK0CON */
 #define B0_Tacs		 	0x0	/*  0clk */
 #define B0_Tcos		 	0x0	/*  0clk */
 #define B0_Tacc		 	0x7	/* 14clk */
@@ -42,7 +68,7 @@
 #define B0_Tacp		 	0x0
 #define B0_PMC		 	0x0	/* normal */
 
-/* BANKCON1 */
+/* BANK1CON */
 #define B1_Tacs		 	0x0	/*  0clk */
 #define B1_Tcos		 	0x0	/*  0clk */
 #define B1_Tacc		 	0x7	/* 14clk */
@@ -51,7 +77,6 @@
 #define B1_Tacp		 	0x0
 #define B1_PMC		 	0x0
 
-/* BANKCON2 */
 #define B2_Tacs		 	0x0
 #define B2_Tcos		 	0x0
 #define B2_Tacc		 	0x7
@@ -60,7 +85,6 @@
 #define B2_Tacp		 	0x0
 #define B2_PMC		 	0x0
 
-/* BANK3CON */
 #define B3_Tacs		 	0x0	/*  0clk */
 #define B3_Tcos		 	0x3	/*  4clk */
 #define B3_Tacc		 	0x7	/* 14clk */
@@ -69,7 +93,6 @@
 #define B3_Tacp		 	0x3     /*  6clk */
 #define B3_PMC		 	0x0	/* normal */
 
-/* BANK4CON */
 #define B4_Tacs		 	0x0	/*  0clk */
 #define B4_Tcos		 	0x0	/*  0clk */
 #define B4_Tacc		 	0x7	/* 14clk */
@@ -78,7 +101,6 @@
 #define B4_Tacp		 	0x0
 #define B4_PMC		 	0x0	/* normal */
 
-/* BANK5CON */
 #define B5_Tacs		 	0x0	/*  0clk */
 #define B5_Tcos		 	0x0	/*  0clk */
 #define B5_Tacc		 	0x7	/* 14clk */
@@ -87,12 +109,10 @@
 #define B5_Tacp		 	0x0
 #define B5_PMC		 	0x0	/* normal */
 
-/* BANK6CON */
 #define B6_MT		 	0x3	/* SDRAM */
 #define B6_Trcd	 	 	0x1
 #define B6_SCAN		 	0x1	/* 9bit */
 
-/* BANK7CON */
 #define B7_MT		 	0x3	/* SDRAM */
 #define B7_Trcd		 	0x1	/* 3clk */
 #define B7_SCAN		 	0x1	/* 9bit */
@@ -103,7 +123,7 @@
 #define Trp		 	0x0	/* 2clk */
 #define Trc		 	0x3	/* 7clk */
 #define Tchr		 	0x2	/* 3clk */
-#define REFCNT		 	0x4f4	/* period=7.8125us or 8 us, HCLK=100Mhz, (2048+1-7.8125*100) */
+#define REFCNT		 	0x4f4	/* period=7.8125us, HCLK=100Mhz, (2048+1-7.8125*100) */
 /**************************************/
 
 _TEXT_BASE:
@@ -142,6 +162,6 @@ SMRDATA:
     .word ((B6_MT<<15)+(B6_Trcd<<2)+(B6_SCAN))
     .word ((B7_MT<<15)+(B7_Trcd<<2)+(B7_SCAN))
     .word ((REFEN<<23)+(TREFMD<<22)+(Trp<<20)+(Trc<<18)+(Tchr<<16)+REFCNT)
-    .word 0x30	/*32M/32M*/
+    .word 0x32
     .word 0x30
     .word 0x30

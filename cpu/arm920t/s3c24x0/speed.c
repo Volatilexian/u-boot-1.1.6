@@ -28,18 +28,14 @@
  * as they seem to have the same PLL and clock machinery inside.
  * The different address mapping is handled by the s3c24xx.h files below.
  */
-/* modified to support the S3C2440---volatile xian
- */
 
 #include <common.h>
-#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) || defined(CONFIG_S3C2440)
+#if defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB)
 
 #if defined(CONFIG_S3C2400)
 #include <s3c2400.h>
 #elif defined(CONFIG_S3C2410)
 #include <s3c2410.h>
-#elif defined(CONFIG_S3C2440)
-#include <s3c2440.h>
 #endif
 
 #define MPLL 0
@@ -70,15 +66,8 @@ static ulong get_PLLCLK(int pllreg)
     m = ((r & 0xFF000) >> 12) + 8;
     p = ((r & 0x003F0) >> 4) + 2;
     s = r & 0x3;
-	
-#if defined(CONFIG_S3C2440)  /* add by volatile xian */
-	if(pllreg == MPLL)
-    	return((CONFIG_SYS_CLK_FREQ * m * 2) / (p << s));
-	else
-    	return((CONFIG_SYS_CLK_FREQ * m) / (p << s));
-#else
+
     return((CONFIG_SYS_CLK_FREQ * m) / (p << s));
-#endif
 }
 
 /* return FCLK frequency */
@@ -92,32 +81,10 @@ ulong get_HCLK(void)
 {
     S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
 
-#if defined(CONFIG_S3C2440) /* add by volatile xian*/
-	int tmp = ((clk_power->CLKDIVN >> 1) & 3);
-	if(tmp == 0)
-		return(get_FCLK());
-	else if(tmp == 1)
-		return(get_FCLK()/2);
-	else if(tmp == 2)
-	{
-		if((clk_power->CAMDIVN >> 9) & 1)
-			return(get_FCLK()/8);
-		else
-			return(get_FCLK()/4);
-	}
-	else
-	{
-		if((clk_power->CAMDIVN >> 8) & 1)
-			return(get_FCLK()/6);
-		else
-			return(get_FCLK()/3);
-	}
-#else
     return((clk_power->CLKDIVN & 0x2) ? get_FCLK()/2 : get_FCLK());
-#endif
 }
 
-/* return PCLK frequency, S3C2440 has the same rule */
+/* return PCLK frequency */
 ulong get_PCLK(void)
 {
     S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
@@ -128,12 +95,7 @@ ulong get_PCLK(void)
 /* return UCLK frequency */
 ulong get_UCLK(void)
 {
-#if defined(CONFIG_S3C2440)   /* add by volatile xian */
-    S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
-	return((clk_power->CLKDIVN & 0x8) ? get_PLLCLK(UPLL)/2 : get_PLLCLK(UPLL));
-#else
     return(get_PLLCLK(UPLL));
-#endif
 }
 
-#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) || defined(CONFIG_S3C2440) */
+#endif /* defined(CONFIG_S3C2400) || defined (CONFIG_S3C2410) || defined (CONFIG_TRAB) */

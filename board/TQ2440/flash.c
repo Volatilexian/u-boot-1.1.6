@@ -1,4 +1,11 @@
 /*
+ * (C) Copyright 2002
+ * Sysgo Real-Time Solutions, GmbH <www.elinos.com>
+ * Alex Zuepke <azu@sysgo.de>
+ *
+ * See file CREDITS for list of people who contributed to this
+ * project.
+ *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
  * published by the Free Software Foundation; either version 2 of
@@ -21,9 +28,9 @@ ulong myflush (void);
 
 
 #define FLASH_BANK_SIZE	PHYS_FLASH_SIZE
-#define MAIN_SECT_SIZE  0x8000	/* 32 KB, maybe using Kword is correct */
+#define MAIN_SECT_SIZE  0x10000	/* 64 KB */
 
-flash_info_t flash_info[CFG_MAX_FLASH_BANKS];   /* the banks is 1 */
+flash_info_t flash_info[CFG_MAX_FLASH_BANKS];
 
 
 #define CMD_READ_ARRAY		0x000000F0
@@ -64,9 +71,6 @@ ulong flash_init (void)
 #elif defined(CONFIG_AMD_LV800)
 			(AMD_MANUFACT & FLASH_VENDMASK) |
 			(AMD_ID_LV800B & FLASH_TYPEMASK);
-#elif defined(CONFIG_EON_29LV160AB)   /* add by volatile xian*/
-			(EON_MANUFACT & FLASH_VENDMASK) |
-			(EON_ID_29LV160AB & FLASH_TYPEMASK);
 #else
 #error "Unknown flash configured"
 #endif
@@ -75,7 +79,7 @@ ulong flash_init (void)
 		memset (flash_info[i].protect, 0, CFG_MAX_FLASH_SECT);
 		if (i == 0)
 			flashbase = PHYS_FLASH_1;
-		else /* can not run here */
+		else
 			panic ("configured too many flash banks!\n");
 		for (j = 0; j < flash_info[i].sector_count; j++) {
 			if (j <= 3) {
@@ -88,9 +92,9 @@ ulong flash_init (void)
 				/* 2nd and 3rd are both 8 KB */
 				if ((j == 1) || (j == 2)) {
 					flash_info[i].start[j] =
-						flashbase + 0x2000 + (j -
+						flashbase + 0x4000 + (j -
 								      1) *
-						0x1000;
+						0x2000;
 				}
 
 				/* 4th 32 KB */
@@ -103,17 +107,17 @@ ulong flash_init (void)
 					flashbase + (j - 3) * MAIN_SECT_SIZE;
 			}
 		}
-		size += flash_info[i].size;   /* sum all banks, but there is noly one nor flash */
+		size += flash_info[i].size;
 	}
 
 	flash_protect (FLAG_PROTECT_SET,
 		       CFG_FLASH_BASE,
 		       CFG_FLASH_BASE + monitor_flash_len - 1,
-		       &flash_info[0]);   /* protect the monitor code */
+		       &flash_info[0]);
 
 	flash_protect (FLAG_PROTECT_SET,
 		       CFG_ENV_ADDR,
-		       CFG_ENV_ADDR + CFG_ENV_SIZE - 1, &flash_info[0]); /*protect the env */
+		       CFG_ENV_ADDR + CFG_ENV_SIZE - 1, &flash_info[0]);
 
 	return size;
 }
@@ -128,9 +132,6 @@ void flash_print_info (flash_info_t * info)
 	case (AMD_MANUFACT & FLASH_VENDMASK):
 		printf ("AMD: ");
 		break;
-	case (EON_MANUFACT & FLASH_VENDMASK):
-		printf ("EON: ");
-		break;
 	default:
 		printf ("Unknown Vendor ");
 		break;
@@ -142,9 +143,6 @@ void flash_print_info (flash_info_t * info)
 		break;
 	case (AMD_ID_LV800B & FLASH_TYPEMASK):
 		printf ("1x Amd29LV800BB (8Mbit)\n");
-		break;
-	case (EON_ID_29LV160AB & FLASH_TYPEMASK):
-		printf ("1x EON29LV160AB (16Mbit)\n");
 		break;
 	default:
 		printf ("Unknown Chip Type\n");
