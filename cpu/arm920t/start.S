@@ -102,6 +102,27 @@ FIQ_STACK_START:
 	.word 0x0badc0de
 #endif
 
+/*
+ * for debug: light the led
+ */
+#ifdef CONFIG_S3C2440
+
+#define GPBCON 0x56000010
+#define GPBDAT 0x56000014
+#define GPBUP  0x56000018
+
+ldr r2,	=0x7ff
+ldr r1, =GPBUP
+str r2, [r1]
+ldr r2, =0x15400
+ldr r1, =GPBCON
+str r2, [r1]
+ldr r2, =0x1d0
+ldr r1, = GPBDAT
+str r2, [r1]
+
+#endif
+
 
 /*
  * the actual reset code
