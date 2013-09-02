@@ -53,7 +53,7 @@
 /*
  * Hardware drivers
  */
-#define CONFIG_DRIVER_CS8900	1	/* we have a CS8900 on-board */
+#define CONFIG_DRIVER_DM9000	1	/* there is a DM9000 on-board */
 #define CS8900_BASE		0x19000300
 #define CS8900_BUS16		1 /* the Linux driver does accesses as shorts */
 
@@ -78,7 +78,7 @@
 #define CONFIG_COMMANDS \
 			(CONFIG_CMD_DFL	 | \
 			CFG_CMD_CACHE	 | \
-			/*CFG_CMD_NAND	 |*/ \
+			CFG_CMD_NAND	 | \
 			/*CFG_CMD_EEPROM |*/ \
 			/*CFG_CMD_I2C	 |*/ \
 			/*CFG_CMD_USB	 |*/ \
@@ -184,3 +184,13 @@
 #define CFG_ENV_SIZE		0x20000	/* Total Size of Environment Sector */
 
 #endif	/* __CONFIG_H */
+/*-----------------------------------------------------------------------
+ * NAND flash  ----add by volatile xian
+ */
+#define CONFIG_NAND_256 1
+
+#ifdef CONFIG_NAND_256
+#define CFG_NAND_BASE	0	/* it's said that is useless, it will be reset*/
+#define CFG_MAX_NAND_DEVICE	1
+#define NAND_MAX_CHIPS	1
+#endif
