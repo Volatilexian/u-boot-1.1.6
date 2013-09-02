@@ -62,11 +62,11 @@
 
 /* BANK3CON */
 #define B3_Tacs		 	0x0	/*  0clk */
-#define B3_Tcos		 	0x0	/*  0clk */
+#define B3_Tcos		 	0x3	/*  4clk */
 #define B3_Tacc		 	0x7	/* 14clk */
-#define B3_Tcoh		 	0x0	/*  0clk */
+#define B3_Tcoh		 	0x1	/*  1clk */
 #define B3_Tah		 	0x0	/*  0clk */
-#define B3_Tacp		 	0x0     /*  0clk */
+#define B3_Tacp		 	0x3     /*  6clk */
 #define B3_PMC		 	0x0	/* normal */
 
 /* BANK4CON */

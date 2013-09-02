@@ -1,6 +1,14 @@
 /*
- * Configuation settings for the TQ2440 board.
- * modified by volatile xian
+ * (C) Copyright 2002
+ * Sysgo Real-Time Solutions, GmbH <www.elinos.com>
+ * Marius Groeger <mgroeger@sysgo.de>
+ * Gary Jennejohn <gj@denx.de>
+ * David Mueller <d.mueller@elsoft.ch>
+ *
+ * Configuation settings for the SAMSUNG SMDK2410 board.
+ *
+ * See file CREDITS for list of people who contributed to this
+ * project.
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -26,11 +34,11 @@
  * (easy to change)
  */
 #define CONFIG_ARM920T		1	/* This is an ARM920T Core	*/
-#define	CONFIG_S3C2440		1	/* in a SAMSUNG S3C2440 SoC     */
-#define CONFIG_TQ2440		1	/* on a SAMSUNG TQ2440 Board  */
+#define	CONFIG_S3C2410		1	/* in a SAMSUNG S3C2410 SoC     */
+#define CONFIG_SMDK2410		1	/* on a SAMSUNG SMDK2410 Board  */
 
 /* input clock of PLL */
-#define CONFIG_SYS_CLK_FREQ	12000000/* the TQ2440 has 12MHz input clock */
+#define CONFIG_SYS_CLK_FREQ	12000000/* the SMDK2410 has 12MHz input clock */
 
 
 #define USE_920T_MMU		1
@@ -52,7 +60,7 @@
 /*
  * select serial console configuration
  */
-#define CONFIG_SERIAL1          1	/* we use SERIAL 1 on TQ2440 */
+#define CONFIG_SERIAL1          1	/* we use SERIAL 1 on SMDK2410 */
 
 /************************************************************
  * RTC
@@ -70,7 +78,7 @@
 #define CONFIG_COMMANDS \
 			(CONFIG_CMD_DFL	 | \
 			CFG_CMD_CACHE	 | \
-			CFG_CMD_NAND	 | \
+			/*CFG_CMD_NAND	 |*/ \
 			/*CFG_CMD_EEPROM |*/ \
 			/*CFG_CMD_I2C	 |*/ \
 			/*CFG_CMD_USB	 |*/ \
@@ -100,7 +108,7 @@
  * Miscellaneous configurable options
  */
 #define	CFG_LONGHELP				/* undef to save memory		*/
-#define	CFG_PROMPT		"[TQ2440 #] "	/* Monitor Command Prompt	*/
+#define	CFG_PROMPT		"SMDK2410 # "	/* Monitor Command Prompt	*/
 #define	CFG_CBSIZE		256		/* Console I/O Buffer Size	*/
 #define	CFG_PBSIZE (CFG_CBSIZE+sizeof(CFG_PROMPT)+16) /* Print Buffer Size */
 #define	CFG_MAXARGS		16		/* max number of command args	*/
@@ -143,13 +151,11 @@
 #define CFG_FLASH_BASE		PHYS_FLASH_1
 
 /*-----------------------------------------------------------------------
- * FLASH and environment organization  NOR FLASH
+ * FLASH and environment organization
  */
 
-#define CONFIG_EON_29LV160AB	1	/* add to support TQ2440--volatile xian*/
-
-#if 0
 #define CONFIG_AMD_LV400	1	/* uncomment this if you have a LV400 flash */
+#if 0
 #define CONFIG_AMD_LV800	1	/* uncomment this if you have a LV800 flash */
 #endif
 
@@ -164,11 +170,6 @@
 #define CFG_MAX_FLASH_SECT	(11)	/* max number of sectors on one chip */
 #define CFG_ENV_ADDR		(CFG_FLASH_BASE + 0x070000) /* addr of environment */
 #endif
-#ifdef CONFIG_EON_29LV160AB
-#define PHYS_FLASH_SIZE		0x00200000 /* 2MB */
-#define CFG_MAX_FLASH_SECT	(35)	/* max number of sectors on one chip */
-#define CFG_ENV_ADDR		(CFG_FLASH_BASE + 0x080000) /* addr of environment */
-#endif
 
 /* timeout values are in ticks */
 #define CFG_FLASH_ERASE_TOUT	(5*CFG_HZ) /* Timeout for Flash Erase */
@@ -176,16 +177,5 @@
 
 #define	CFG_ENV_IS_IN_FLASH	1
 #define CFG_ENV_SIZE		0x10000	/* Total Size of Environment Sector */
-
-/*-----------------------------------------------------------------------
- * NAND FLASH
- */
-#define CONFIG_TQ2440_NAND_FLASH	1    /* use the nand flash */
-
-#ifdef CONFIG_TQ2440_NAND_FLASH
-#define NAND_MAX_CHIPS		1		/* only one nand flash */
-#define CFG_MAX_NAND_DEVICE	1		/*  */
-#define CFG_NAND_BASE		0		/* it's said that it will be reset in board_nand_init */
-#endif
 
 #endif	/* __CONFIG_H */

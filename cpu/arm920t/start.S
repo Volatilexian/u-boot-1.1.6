@@ -1,8 +1,8 @@
 /*
  *  armboot - Startup Code for ARM920 CPU-core
  *
- *  Copyright (c) 2001	Marius Gröger <mag@sysgo.de>
- *  Copyright (c) 2002	Alex Züpke <azu@sysgo.de>
+ *  Copyright (c) 2001	Marius Gré°ƒer <mag@sysgo.de>
+ *  Copyright (c) 2002	Alex Zé»³ke <azu@sysgo.de>
  *  Copyright (c) 2002	Gary Jennejohn <gj@denx.de>
  *
  * See file CREDITS for list of people who contributed to this
@@ -90,6 +90,14 @@ _bss_start:
 _bss_end:
 	.word _end
 
+.globl FREE_RAM_END
+FREE_RAM_END:
+	.word	0x0badc0de
+
+.globl FREE_RAM_SIZE
+FREE_RAM_SIZE:
+	.word	0x0badc0de
+
 #ifdef CONFIG_USE_IRQ
 /* IRQ stack memory (calculated at run-time) */
 .globl IRQ_STACK_START
@@ -100,27 +108,6 @@ IRQ_STACK_START:
 .globl FIQ_STACK_START
 FIQ_STACK_START:
 	.word 0x0badc0de
-#endif
-
-/*
- * for debug: light the led
- */
-#ifdef CONFIG_S3C2440
-
-#define GPBCON 0x56000010
-#define GPBDAT 0x56000014
-#define GPBUP  0x56000018
-
-ldr r2,	=0x7ff
-ldr r1, =GPBUP
-str r2, [r1]
-ldr r2, =0x15400
-ldr r1, =GPBCON
-str r2, [r1]
-ldr r2, =0x1d0
-ldr r1, = GPBDAT
-str r2, [r1]
-
 #endif
 
 
@@ -142,24 +129,15 @@ reset:
 # define pWTCON		0x15300000
 # define INTMSK		0x14400008	/* Interupt-Controller base addresses */
 # define CLKDIVN	0x14800014	/* clock divisor register */
-#elif defined(CONFIG_S3C2410)
+#elif defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
 # define pWTCON		0x53000000
+# define INTMOD		0X4A000004
 # define INTMSK		0x4A000008	/* Interupt-Controller base addresses */
 # define INTSUBMSK	0x4A00001C
 # define CLKDIVN	0x4C000014	/* clock divisor register */
-#elif defined(CONFIG_S3C2440)	/*add by volatile xian*/
-# define pWTCON		0x53000000
-# define INTMSK		0x4A000008
-# define INTSUBMSK	0x4A00001C
-#if 0
-# define MPLLCON	0x4C000004
-# define UPLLCON	0x4C000008
-#endif
-# define CLKDIVN	0x4C000014
-# define CAMDIVN	0x4C000018
 #endif
 
-#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)   /*modified by volatile xian*/
+#if defined(CONFIG_S3C2400) || defined(CONFIG_S3C2410) || defined(CONFIG_S3C2440)
 	ldr     r0, =pWTCON
 	mov     r1, #0x0
 	str     r1, [r0]
@@ -170,44 +148,23 @@ reset:
 	mov	r1, #0xffffffff
 	ldr	r0, =INTMSK
 	str	r1, [r0]
-#if defined(CONFIG_S3C2410)
+# if defined(CONFIG_S3C2410)
 	ldr	r1, =0x3ff
 	ldr	r0, =INTSUBMSK
 	str	r1, [r0]
-#elif defined(CONFIG_S3C2440)   /*add by volatile xian*/
+# elif defined(CONFIG_S3C2440)
 	ldr	r1, =0x7fff
 	ldr	r0, =INTSUBMSK
 	str	r1, [r0]
-#endif
+# endif
 
 #if 0
-#if defined(CONFIG_S3C2440)	/*add by volatile xian*/
-	ldr	r0, =CAMDIVN
-	mov	r1, #0
-	str	r1, [r0]
-
-	ldr	r0, =CLKDIVN
-	mov	r1, #5	/* FCLK:HCLK:PCLK=1:4:8, UCLK=UPLL */
-	str	r1, [r0]
-
-#if 0
-	ldr	r0, =UPLLCON
-	ldr	r1, =0x38022	/* 48MHz */
-	str	r1, [r0]
-
-	ldr	r0, =MPLLCON
-	ldr	r1, =0x5c021	/* 400MHz */
-	str	r1, [r0]
-#endif    /* if 0 */
-#else     /* s3c2410 */
 	/* FCLK:HCLK:PCLK = 1:2:4 */
 	/* default FCLK is 120 MHz ! */
 	ldr	r0, =CLKDIVN
 	mov	r1, #3
 	str	r1, [r0]
-#endif    /* 2440 or 2410 */
-#endif   /* if 0*/
-
+#endif
 #endif	/* CONFIG_S3C2400 || CONFIG_S3C2410 || CONFIG_S3C2440 */
 
 	/*
@@ -218,16 +175,32 @@ reset:
 	bl	cpu_init_crit
 #endif
 
+	/* Set up the stack						    */
+stack_setup:
+	ldr	r0, _TEXT_BASE		/* upper 128 KiB: relocated uboot   */
+	sub	r0, r0, #CFG_MALLOC_LEN	/* malloc area                      */
+	sub	r0, r0, #CFG_GBL_DATA_SIZE /* bdinfo                        */
+
+#ifdef CONFIG_USE_IRQ
+	sub	r0, r0, #(CONFIG_STACKSIZE_IRQ+CONFIG_STACKSIZE_FIQ)
+#endif
+	sub	sp, r0, #12		/* leave 3 words for abort-stack    */
+
+	bl clock_init
+
 #ifndef CONFIG_SKIP_RELOCATE_UBOOT
 relocate:				/* relocate U-Boot to RAM	    */
 	adr	r0, _start		/* r0 <- current position of code   */
 	ldr	r1, _TEXT_BASE		/* test if we run from flash or RAM */
 	cmp     r0, r1                  /* don't reloc during debug         */
-	beq     stack_setup
+	beq     clear_bss
 
 	ldr	r2, _armboot_start
 	ldr	r3, _bss_start
 	sub	r2, r3, r2		/* r2 <- size of armboot            */
+#if 1
+	bl  CopyCode2Ram		/* r0: source, r1: dest, r2: size */
+#else
 	add	r2, r0, r2		/* r2 <- source end address         */
 
 copy_loop:
@@ -235,17 +208,8 @@ copy_loop:
 	stmia	r1!, {r3-r10}		/* copy to   target address [r1]    */
 	cmp	r0, r2			/* until source end addreee [r2]    */
 	ble	copy_loop
-#endif	/* CONFIG_SKIP_RELOCATE_UBOOT */
-
-	/* Set up the stack						    */
-stack_setup:
-	ldr	r0, _TEXT_BASE		/* upper 128 KiB: relocated uboot   */
-	sub	r0, r0, #CFG_MALLOC_LEN	/* malloc area                      */
-	sub	r0, r0, #CFG_GBL_DATA_SIZE /* bdinfo                        */
-#ifdef CONFIG_USE_IRQ
-	sub	r0, r0, #(CONFIG_STACKSIZE_IRQ+CONFIG_STACKSIZE_FIQ)
 #endif
-	sub	sp, r0, #12		/* leave 3 words for abort-stack    */
+#endif	/* CONFIG_SKIP_RELOCATE_UBOOT */
 
 clear_bss:
 	ldr	r0, _bss_start		/* find start of bss segment        */
@@ -458,14 +422,92 @@ not_used:
 	bad_save_user_regs
 	bl 	do_not_used
 
+@ HJ
+.globl Launch
+    .align	4
+Launch:    
+    mov r7, r0
+    @ diable interrupt
+	@ disable watch dog timer
+	mov	r1, #0x53000000
+	mov	r2, #0x0
+	str	r2, [r1]
+
+    ldr r1,=INTMSK
+    ldr r2,=0xffffffff  @ all interrupt disable
+    str r2,[r1]
+
+    ldr r1,=INTSUBMSK
+    ldr r2,=0x7ff       @ all sub interrupt disable
+    str r2,[r1]
+
+    ldr     r1, = INTMOD
+    mov r2, #0x0        @ set all interrupt as IRQ (not FIQ)
+    str     r2, [r1]
+
+    @ 
+	mov	ip, #0
+	mcr	p15, 0, ip, c13, c0, 0      @	/* zero PID */
+	mcr	p15, 0, ip, c7, c7, 0       @	/* invalidate I,D caches */
+	mcr	p15, 0, ip, c7, c10, 4      @	/* drain write buffer */
+	mcr	p15, 0, ip, c8, c7, 0       @	/* invalidate I,D TLBs */
+	mrc	p15, 0, ip, c1, c0, 0       @	/* get control register */
+	bic	ip, ip, #0x0001             @	/* disable MMU */
+	mcr	p15, 0, ip, c1, c0, 0       @	/* write control register */
+
+    @ MMU_EnableICache
+    @mrc p15,0,r1,c1,c0,0
+    @orr r1,r1,#(1<<12)
+    @mcr p15,0,r1,c1,c0,0
+
+#ifdef CONFIG_SURPORT_WINCE
+    bl Wince_Port_Init
+#endif
+
+    @ clear SDRAM: the end of free mem(has wince on it now) to the end of SDRAM
+    ldr     r3, FREE_RAM_END
+    ldr     r4, =PHYS_SDRAM_1+PHYS_SDRAM_1_SIZE    @ must clear all the memory unused to zero
+    mov     r5, #0
+
+    ldr     r1, _armboot_start
+    ldr     r2, =On_Steppingstone
+    sub     r2, r2, r1
+    mov     pc, r2
+On_Steppingstone:
+2:  stmia   r3!, {r5}
+    cmp     r3, r4
+    bne     2b
+
+    @ set sp = 0 on sys mode
+    mov sp, #0
+
+    @ add by HJ, switch to SVC mode
+	msr	cpsr_c,	#0xdf	@ set the I-bit = 1, diable the IRQ interrupt
+	msr	cpsr_c,	#0xd3	@ set the I-bit = 1, diable the IRQ interrupt
+    ldr sp, =0x31ff5800	
+    
+    nop
+	nop
+    nop
+	nop
+
+	mov     pc, r7  @ Jump to PhysicalAddress
+	nop
+    mov pc, lr
+
 #ifdef CONFIG_USE_IRQ
 
 	.align	5
 irq:
-	get_irq_stack
-	irq_save_user_regs
-	bl 	do_irq
-	irq_restore_user_regs
+/* add by www.embedsky.net to use IRQ for USB and DMA */
+	sub	lr, lr, #4			        @ the return address
+	ldr	sp, IRQ_STACK_START	        @ the stack for irq
+	stmdb	sp!, 	{ r0-r12,lr }	@ save registers
+	
+	ldr	lr,	=int_return		        @ set the return addr
+	ldr	pc, =IRQ_Handle		        @ call the isr
+int_return:
+	ldmia	sp!, 	{ r0-r12,pc }^	@ return from interrupt
 
 	.align	5
 fiq:
