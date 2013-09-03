@@ -31,8 +31,8 @@
 
 DECLARE_GLOBAL_DATA_PTR;
 
-#ifdef CONFIG_SERIAL1
-#define UART_NR	S3C24X0_UART0
+#ifdef CONFIG_SERIAL1     /* defined in file TQ2440.h */
+#define UART_NR	S3C24X0_UART0     /* the type is enum, it equal to 0 */
 
 #elif defined(CONFIG_SERIAL2)
 # if defined(CONFIG_TRAB)
@@ -57,7 +57,7 @@ void serial_setbrg (void)
 	unsigned int reg = 0;
 
 	/* value is calculated so : (int)(PCLK/16./baudrate) -1 */
-	reg = get_PCLK() / (16 * gd->baudrate) - 1;
+	reg = get_PCLK() / (16 * gd->baudrate) - 1;// i cant find the initial of the gd->baudrate
 
 	/* FIFO enable, Tx/Rx FIFO clear */
 	uart->UFCON = 0x07;

@@ -53,7 +53,7 @@
 /*
  * Hardware drivers
  */
-#define CONFIG_DRIVER_DM9000	1	/* there is a DM9000 on-board */
+#define CONFIG_DRIVER_CS8900	1	/* there is a DM9000 on-board */
 #define CS8900_BASE		0x19000300
 #define CS8900_BUS16		1 /* the Linux driver does accesses as shorts */
 

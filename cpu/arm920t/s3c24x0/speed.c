@@ -69,7 +69,14 @@ static ulong get_PLLCLK(int pllreg)
     p = ((r & 0x003F0) >> 4) + 2;
     s = r & 0x3;
 
+	#ifdef CONFIG_S3C2440	/* add by volatile xian */
+	if(pllreg == MPLL)
+    	return ((CONFIG_SYS_CLK_FREQ * m * 2) / (p << s));
+	else
+    	return((CONFIG_SYS_CLK_FREQ * m) / (p << s));
+	#else
     return((CONFIG_SYS_CLK_FREQ * m) / (p << s));
+	#endif
 }
 
 /* return FCLK frequency */
@@ -83,7 +90,25 @@ ulong get_HCLK(void)
 {
     S3C24X0_CLOCK_POWER * const clk_power = S3C24X0_GetBase_CLOCK_POWER();
 
+#ifdef CONFIG_S3C2440
+	switch((clk_power->CLKDIVN>>1) & 3)
+	{
+	case 0:
+		return get_FCLK();
+		break;
+	case 1:
+		return get_FCLK()/2;
+		break;
+	case 2:
+		return get_FCLK()/4;//when CAMDIVN[9] = 0
+		break;
+	case 3:
+		return get_FCLK()/3;//when CAMDIVN[8] = 0
+		break;
+	}
+#else
     return((clk_power->CLKDIVN & 0x2) ? get_FCLK()/2 : get_FCLK());
+#endif
 }
 
 /* return PCLK frequency */
